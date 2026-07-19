@@ -1,0 +1,16 @@
+{
+  "short_name": "DailyLog",
+  "name": "Daily Timeline Voice Log PWA",
+  "start_url": "index.html",
+  "background_color": "#f8fafc",
+  "theme-color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%234f46e5'><circle cx='50' cy='50' r='40'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20' font-family='sans-serif'>LOG</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
