@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daily-log-v5'; // Đổi phiên bản cache
+const CACHE_NAME = 'daily-log-v6'; // Đổi phiên bản cache
 const ASSETS = [
   './',
   './index.html',
