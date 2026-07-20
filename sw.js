@@ -1,9 +1,10 @@
-const CACHE_NAME = 'daily-log-v4'; // Đổi tên phiên bản để trình duyệt cập nhật cache mới
+const CACHE_NAME = 'daily-log'; // Phiên bản cache
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdn-icons-png.flaticon.com/512/5499/5499335.png' // Cache luôn icon từ CDN để tăng tốc độ hiển thị
+  './icons/icon-192x192.png', // Thêm icon vào đây để cache
+  './icons/icon-512x512.png'
 ];
 
 // Cài đặt và lưu các file cốt lõi vào bộ nhớ đệm
@@ -32,27 +33,26 @@ self.addEventListener('activate', (e) => {
 
 // Chiến lược Stale-While-Revalidate: Tải cực nhanh từ Cache, cập nhật ngầm từ Network
 self.addEventListener('fetch', (e) => {
-  // Chỉ xử lý các request GET thông thường (bỏ qua các request của extension hoặc POST nếu có)
+  // Chỉ áp dụng cache cho các request thông thường (GET)
   if (e.request.method !== 'GET') return;
 
   e.respondWith(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.match(e.request).then((cachedResponse) => {
-        // Tạo một request fetch để cập nhật cache ngầm từ mạng
+        // Tạo một request fetch để cập nhật cache ngầm
         const fetchedResponse = fetch(e.request).then((networkResponse) => {
-          // Nếu tải thành công, lưu bản mới vào cache
-          if (networkResponse.status === 200 || networkResponse.type === 'opaque') {
+          if (networkResponse.status === 200) {
             cache.put(e.request, networkResponse.clone());
           }
           return networkResponse;
         }).catch(() => {
-          // Khi mất mạng hoàn toàn và người dùng điều hướng trang, trả về index.html cứu cánh
+          // Xử lý fallback khi mất mạng hoàn toàn và request điều hướng (navigate)
           if (e.request.mode === 'navigate') {
             return caches.match('./index.html');
           }
         });
 
-        // Ưu tiên trả về kết quả từ cache ngay lập tức để app load "tức thì", nếu chưa có cache thì dùng network
+        // Trả về kết quả từ cache ngay lập tức nếu có, nếu không thì đợi network
         return cachedResponse || fetchedResponse;
       });
     })
