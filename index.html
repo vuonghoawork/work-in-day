@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Timeline Log | Web3 Version</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d0e12">
+    <link class="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5499/5499335.png">
+    
+    <!-- Google Fonts cho phong cách Futuristic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1a1235 0%, #0d0e12 100%);
+            --panel-bg: rgba(22, 25, 35, 0.65);
+            --border-glow: rgba(168, 85, 247, 0.4);
+            
+            /* Hộp màu Neon định hình Web3 */
+            --cyan: #00f2fe;
+            --purple: #a855f7;
+            --pink: #f43f5e;
+            --emerald: #10b981;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* Container kính mờ (Glassmorphism) */
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 40px rgba(168, 85, 247, 0.1);
+        }
+
+        /* Giao diện Header Web3 */
+        .web3-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        h2 {
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .network-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple);
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .network-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        /* Nút ghi âm phong cách Cyberpunk */
+        button {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #4f46e5 0%, var(--purple) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-record:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .btn-record.recording {
+            background: linear-gradient(135deg, var(--pink) 0%, #dc2626 100%);
+            animation: pulse-glow 1.5s infinite;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.98); opacity: 0.85; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Trạng thái status tinh tế */
+        .status {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 20px;
+        }
+
+        /* Khung nhập văn bản */
+        #preview-text {
+            width: 100%;
+            min-height: 100px;
+            box-sizing: border-box;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: var(--text-main);
+            resize: vertical;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        #preview-text:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Nút Lưu Khối Dữ Liệu */
+        .btn-save {
+            background: linear-gradient(135deg, #059669 0%, var(--emerald) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Khu vực Lịch trình / Khối Dữ liệu lịch sử */
+        .logs-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .logs-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+        }
+
+        .btn-clear-all {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--pink);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .btn-clear-all:hover {
+            background: rgba(244, 63, 94, 0.25);
+            color: #fff;
+        }
+
+        /* Thẻ Log Item tựa như một "Block" trên chuỗi */
+        .log-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+
+        .log-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0,f2,fe, 0.2);
+        }
+
+        .log-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .log-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            padding-right: 20px;
+        }
+
+        /* Nút xóa tinh gọn */
+        .btn-delete {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete:hover {
+            color: var(--pink);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="web3-header">
+        <h2>AI TIMELINE LOG</h2>
+        <div class="network-badge">Local Engine / PWA</div>
+    </div>
+    
+    <div class="controls">
+        <button id="record-btn" class="btn-record">
+            <span>🎙️</span> <span id="btn-text">Nhấn để ghi âm</span>
+        </button>
+        
+        <div id="status" class="status">Sẵn sàng khởi tạo phiên...</div>
+        
+        <textarea id="preview-text" placeholder="Dữ liệu giọng nói sẽ được giải mã tại đây..."></textarea>
+        
+        <button id="save-btn" class="btn-save">
+            <span>💾</span> Mint vào Lịch Trình
+        </button>
+    </div>
+
+    <div class="logs-section">
+        <div class="logs-header">
+            <h3>Các khối dữ liệu (Hôm nay)</h3>
+            <button id="clear-all-btn" class="btn-clear-all" style="display: none;">Wipe Toàn Bộ</button>
+        </div>
+        <div id="logs-container"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>
+  eruda.init();
+</script>
+<script src="./app.js"></script>
+
+</body>
+</html>
