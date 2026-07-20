@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Timeline Log PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <link class="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5499/5499335.png">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-record {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-record.recording {
+            background-color: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        #preview-text {
+            width: 100%;
+            min-height: 80px;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            resize: vertical;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn-save {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .logs-section {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+        }
+
+        /* CSS tạo layout cho phần tiêu đề lịch trình và nút xoá tất cả */
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .logs-header h3 {
+            margin: 0;
+        }
+
+        .btn-clear-all {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-clear-all:hover {
+            background-color: #fca5a5;
+        }
+
+        .log-item {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .log-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Daily Timeline Log PWA</h2>
+    
+    <div class="controls">
+        <button id="record-btn" class="btn-record">🎙️ Nhấn để nói</button>
+        <div id="status" class="status">Sẵn sàng ghi âm...</div>
+        
+        <textarea id="preview-text" placeholder="Văn bản dịch từ giọng nói sẽ xuất hiện ở đây..."></textarea>
+        <button id="save-btn" class="btn-save">💾 Lưuuuuuuu vào lịch trình</button>
+    </div>
+
+    <div class="logs-section">
+        <!-- Bọc tiêu đề và nút Xóa tất cả trong cụm logs-header -->
+        <div class="logs-header">
+            <h3>Lịch trình hôm nay</h3>
+            <button id="clear-all-btn" class="btn-clear-all" style="display: none;">🗑️ Xoá hết</button>
+        </div>
+        <div id="logs-container"></div>
+    </div>
+</div>
+
+<script>
+    // Đăng ký Service Worker đồng bộ và chuẩn hóa
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker đã đăng ký thành công! Phạm vi:', reg.scope))
+                .catch(err => console.error('Đăng ký Service Worker thất bại:', err));
+        });
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recordBtn = document.getElementById('record-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const previewText = document.getElementById('preview-text');
+    const statusDiv = document.getElementById('status');
+    const logsContainer = document.getElementById('logs-container');
+    const clearAllBtn = document.getElementById('clear-all-btn');
+
+    let recognition;
+    let isRecording = false;
+
+    if (!SpeechRecognition) {
+        statusDiv.innerText = "Trình duyệt không hỗ trợ nhận diện giọng nói. Hãy dùng Chrome/Edge.";
+        recordBtn.disabled = true;
+    } else {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = 'vi-VN';
+
+        recognition.onresult = (event) => {
+            let currentText = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                currentText += event.results[i][0].transcript;
+            }
+            previewText.value = (previewText.value + ' ' + currentText).trim();
+        };
+
+        recognition.onerror = (event) => {
+            console.error(event.error);
+            statusDiv.innerText = "Lỗi: " + event.error + ". Cần Micro và HTTPS/Live Server.";
+            stopRecording();
+        };
+
+        recognition.onend = () => {
+            if (isRecording) recognition.start();
+        };
+    }
+
+    recordBtn.addEventListener('click', () => {
+        if (!isRecording) {
+            isRecording = true;
+            recognition.start();
+            recordBtn.innerText = "🛑 Đang ghi âm... Nhấn để dừng";
+            recordBtn.classList.add('recording');
+            statusDiv.innerText = "Đang lắng nghe...";
+        } else {
+            stopRecording();
+        }
+    });
+
+    function stopRecording() {
+        isRecording = false;
+        recognition.stop();
+        recordBtn.innerText = "🎙️ Nhấn để nói";
+        recordBtn.classList.remove('recording');
+        statusDiv.innerText = "Đã dừng.";
+    }
+
+    saveBtn.addEventListener('click', () => {
+        const text = previewText.value.trim();
+        if (!text) return alert("Không có nội dung để lưu!");
+
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('vi-VN');
+        
+        const logEntry = { id: Date.now(), time: timeString, content: text };
+        let logs = JSON.parse(localStorage.getItem('daily_logs')) || [];
+        logs.unshift(logEntry);
+        localStorage.setItem('daily_logs', JSON.stringify(logs));
+
+        previewText.value = '';
+        displayLogs();
+    });
+
+    // Thêm sự kiện click cho nút xóa toàn bộ lịch sử log
+    clearAllBtn.addEventListener('click', () => {
+        if (confirm("Bạn có chắc chắn muốn XOÁ TOÀN BỘ lịch sử nhật ký không? Thao tác này không thể hoàn tác!")) {
+            localStorage.removeItem('daily_logs');
+            displayLogs();
+        }
+    });
+
+    function displayLogs() {
+        logsContainer.innerHTML = '';
+        const logs = JSON.parse(localStorage.getItem('daily_logs')) || [];
+
+        if (logs.length === 0) {
+            logsContainer.innerHTML = '<p style="color: var(--text-light); font-style: italic; text-align: center;">Chưa có nhật ký.</p>';
+            clearAllBtn.style.display = 'none'; // Ẩn nút nếu không có log
+            return;
+        }
+
+        clearAllBtn.style.display = 'block'; // Hiện nút nếu có log
+
+        logs.forEach(log => {
+            const item = document.createElement('div');
+            item.className = 'log-item';
+            item.innerHTML = `
+                <div class="log-time">${log.time}</div>
+                <div class="log-text"></div>
+                <button class="btn-delete">❌</button>
+            `;
+            item.querySelector('.log-text').innerText = log.content;
+            
+            item.querySelector('.btn-delete').addEventListener('click', () => {
+                if (confirm("Xóa dòng này?")) {
+                    let currentLogs = JSON.parse(localStorage.getItem('daily_logs')) || [];
+                    currentLogs = currentLogs.filter(item => item.id !== log.id);
+                    localStorage.setItem('daily_logs', JSON.stringify(currentLogs));
+                    displayLogs();
+                }
+            });
+            logsContainer.appendChild(item);
+        });
+    }
+
+    displayLogs();
+</script>
+<!-- Nhúng thư viện Eruda từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>
+  eruda.init();
+</script>
+<script src="./app.js"></script>
+
+</body>
+</html>
