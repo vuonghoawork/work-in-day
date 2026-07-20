@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Timeline & Finance Log | Web3 Version</title>
+    <link class="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d0e12">
+    <link class="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/5499/5499335.png">
+    
+    <!-- Google Fonts cho phong cách Futuristic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1a1235 0%, #0d0e12 100%);
+            --panel-bg: rgba(22, 25, 35, 0.65);
+            --border-glow: rgba(168, 85, 247, 0.4);
+            
+            /* Hộp màu Neon định hình Web3 */
+            --cyan: #00f2fe;
+            --purple: #a855f7;
+            --pink: #f43f5e;
+            --emerald: #10b981;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* Container kính mờ (Glassmorphism) */
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 40px rgba(168, 85, 247, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Giao diện Header Web3 */
+        .web3-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Giao diện chuyển đổi theme */
+        .theme-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 16px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .theme-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-controls-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-theme-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--cyan);
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-theme-toggle:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--cyan);
+        }
+
+        .theme-dropdown-select {
+            background: #0d0e12;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .network-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple);
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .network-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        /* HỆ THỐNG TABS WEB3 */
+        .web3-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+        }
+
+        .tab-content {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            opacity: 0;
+            visibility: hidden;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 8px !important;
+        }
+
+        .tab-content.active {
+            position: relative;
+            top: 0;
+            left: 0;
+            opacity: 1;
+            visibility: visible;
+            display: block !important;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        button {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #4f46e5 0%, var(--purple) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-record:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .btn-record.recording {
+            background: linear-gradient(135deg, var(--pink) 0%, #dc2626 100%);
+            animation: pulse-glow 1.5s infinite;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.98); opacity: 0.85; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .status {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 20px;
+        }
+
+        #preview-text {
+            width: 100%;
+            min-height: 80px;
+            box-sizing: border-box;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: var(--text-main);
+            resize: vertical;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        #preview-text:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #059669 0%, var(--emerald) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+        }
+
+        /* THÀNH PHẦN TIỀN MẶT & TÀI CHÍNH */
+        .finance-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .balance-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .balance-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--cyan);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .init-balance-box {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        .input-balance {
+            flex: 1;
+            min-width: 0;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .input-balance:focus {
+            outline: none;
+            border-color: var(--cyan);
+        }
+
+        .btn-init {
+            flex-shrink: 0;
+            white-space: nowrap;
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 10px;
+            background: var(--purple);
+            color: #fff;
+            cursor: pointer;
+            box-sizing: border-box;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* KHU VỰC CHART VÀ ĐỒ THỊ TRỤC Y */
+        .chart-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 12px;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .chart-container-box {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+
+        /* Khu vực Lịch trình */
+        .logs-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .logs-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Styling Nút Wipe Đặt ở Cuối Tab */
+        .btn-clear-all {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            color: var(--pink);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .btn-clear-all:hover {
+            background: rgba(244, 63, 94, 0.3);
+            border-color: var(--pink);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+
+        .log-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            margin-bottom: 6px;
+        }
+
+        .log-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            padding-right: 20px;
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-delete:hover {
+            color: var(--pink);
+        }
+
+        .tx-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-weight: bold;
+        }
+        .tx-plus { background: rgba(16, 185, 129, 0.15); color: #4ade80; }
+        .tx-minus { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="web3-header">
+        <h2>AI HUB LOG ENGINE</h2>
+        <div class="network-badge">Local Engine / Financial Track</div>
+    </div>
+
+    <!-- Theme Selector Dropdown & Quick Toggle -->
+    <div class="theme-section">
+        <div class="theme-label"><span>🎨</span> Giao diện</div>
+        <div class="theme-controls-wrapper">
+            <button id="theme-toggle-btn" class="btn-theme-toggle">⚡ Đổi nhanh</button>
+            <select id="theme-select" class="theme-dropdown-select">
+                <option value="cyber">Cyber Purple</option>
+                <option value="gold">Hoàng Kim</option>
+                <option value="blood">Huyết Nguyệt</option>
+                <option value="emerald">Phỉ Thúy</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Thanh chuyển đổi Tabs -->
+    <div class="web3-tabs">
+        <button class="tab-btn active" data-tab="timeline">📝 Lịch Trình</button>
+        <button class="tab-btn" data-tab="finance">📊 Xu hướng </button>
+    </div>
+
+    <!-- TAB 1: Nội dung Lịch Trình -->
+    <div id="tab-timeline" class="tab-content active">
+        <div class="controls">
+            <button id="record-btn" class="btn-record">
+                 <span id="btn-text">🎙️ Nhấn để ghi âm</span>
+            </button>
+            <div id="status" class="status">Mẹo: Đọc rõ các số. Riêng số tròn trăm,... đọc rõ</div>
+            <textarea id="preview-text" placeholder="Dữ liệu + Từ khóa
+(Vd: Work a100, Eat b50)"></textarea>
+            <button id="save-btn" class="btn-save">💾 Mint dữ liệu</button>
+        </div>
+
+        <div class="logs-section">
+            <div class="logs-header">
+                <h3>Các khối dữ liệu Ledger</h3>
+            </div>
+            <!-- Container hiển thị các Khối Log -->
+            <div id="logs-container"></div>
+
+            <!-- Nút Wipe đặt ở cuối Tab Lịch Trình -->
+            <button id="clear-all-btn" class="btn-clear-all" style="display: none;">
+                🗑️ Wipe Toàn Bộ Data (Lịch Trình & Tài Chính)
+            </button>
+        </div>
+    </div>
+
+    <!-- TAB 2: Nội dung Tiền Mặt & Đồ Thị -->
+    <div id="tab-finance" class="tab-content">
+        <div class="finance-card">
+            <div class="balance-title">Số dư hiện tại ($)</div>
+            <div id="balance-display" class="balance-value">0</div>
+            
+            <div class="init-balance-box">
+                <input type="number" id="init-balance-input" class="input-balance" placeholder="Nhập số tiền ban đầu...">
+                <button id="init-balance-btn" class="btn-init">Khởi tạo</button>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <div class="balance-title" style="margin-bottom: 8px;">Biểu đồ Biến động Tài sản</div>
+            <div class="chart-container-box">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tải Thư viện Chart.js siêu tốc qua CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./app.js"></script>
+
+</body>
+</html>
