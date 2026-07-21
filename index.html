@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Timeline & Finance Log | Royal Theme</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0a0f1d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI Hub Log">
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           1. ĐỊNH NGHĨA BIẾN MÀU THEME (CSS Single Source of Truth)
+           ========================================== */
+        /* Theme 1: Hoàng Gia (Gold - Default) */
+        :root, body.theme-gold {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #0f172a 0%, #050811 100%);
+            --panel-bg: rgba(15, 23, 42, 0.75);
+            --royal-gold: #d4af37;
+            --royal-gold-light: #fef08a;
+            --royal-gold-muted: rgba(212, 175, 55, 0.15);
+            --royal-navy: #1e3a8a;
+            --royal-navy-dark: #0f1c3f;
+            --border-glow: rgba(212, 175, 55, 0.35);
+        }
+
+/* Theme 2: Xanh Dương Cyber (Cyber Neon Blue) */
+body.theme-cyber {
+    /* Nền gradient chuyển từ xanh lam đậm sang đen sâu */
+    --bg-gradient: radial-gradient(circle at 50% 0%, #0369a1 0%, #030712 100%);
+    
+    /* Nền thẻ panel mờ chuẩn Cyber */
+    --panel-bg: rgba(12, 74, 110, 0.4);
+    
+    /* Màu xanh Neon rực rỡ cho nút bấm, số dư & accent */
+    --royal-gold: #00f0ff;
+    
+    /* Màu xanh tươi bắt mắt dùng cho highlight/chữ nổi bật */
+    --royal-gold-light: #38bdf8;
+    
+    /* Hiệu ứng phủ bóng xanh neon mờ */
+    --royal-gold-muted: rgba(0, 240, 255, 0.15);
+    
+    /* Màu xanh navy đậm hỗ trợ tương phản */
+    --royal-navy: #0284c7;
+    --royal-navy-dark: #075985;
+    
+    /* Viền phát sáng xanh Neon */
+    --border-glow: rgba(56, 189, 248, 0.5);
+}
+
+/* Theme 2: Xanh Dương Sang Trọng (Royal Sapphire) */
+body.theme-cyber {
+    /* Nền Gradient chuyển sắc từ Xanh Đêm Đẳng Cấp (Midnight Navy) sang Đen Sâu */
+    --bg-gradient: radial-gradient(circle at 50% 0%, #0d1b2a 0%, #050a14 100%);
+    
+    /* Nền thẻ panel kính mờ tối giản, sâu lắng */
+    --panel-bg: rgba(13, 27, 42, 0.75);
+    
+    /* Màu Accent Xanh Sapphire Hoàng Gia rực rỡ & tinh tế */
+    --royal-gold: #2563eb;
+    
+    /* Màu Xanh Lam Sáng (Ice Sapphire) dùng làm Highlight, chữ nổi & Biểu đồ */
+    --royal-gold-light: #60a5fa;
+    
+    /* Ánh sáng mờ Sapphire bao phủ nhẹ nhàng */
+    --royal-gold-muted: rgba(37, 99, 235, 0.18);
+    
+    /* Tông Xanh Navy đậm cho các nút bấm & hiệu ứng chiều sâu */
+    --royal-navy: #1d4ed8;
+    --royal-navy-dark: #1e3a8a;
+    
+    /* Viền phát sáng màu Xanh Lam Băng (Ice Blue) thanh lịch */
+    --border-glow: rgba(96, 165, 250, 0.35);
+}
+
+        /* Theme 3: Huyết Nguyệt (Blood) */
+        body.theme-blood {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #2a0808 0%, #080202 100%);
+            --panel-bg: rgba(35, 12, 12, 0.75);
+            --royal-gold: #ef4444;
+            --royal-gold-light: #fca5a5;
+            --royal-gold-muted: rgba(239, 68, 68, 0.15);
+            --royal-navy: #991b1b;
+            --royal-navy-dark: #450a0a;
+            --border-glow: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Theme 4: Phỉ Thúy (Emerald) */
+        body.theme-emerald {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #021a0e 0%, #020804 100%);
+            --panel-bg: rgba(8, 30, 18, 0.75);
+            --royal-gold: #10b981;
+            --royal-gold-light: #6ee7b7;
+            --royal-gold-muted: rgba(16, 185, 129, 0.15);
+            --royal-navy: #065f46;
+            --royal-navy-dark: #022c22;
+            --border-glow: rgba(16, 185, 129, 0.4);
+        }
+
+        /* ==========================================
+           2. CÁC BIẾN CỐ ĐỊNH & GIAO DIỆN CHUNG
+           ========================================== */
+        :root {
+            --danger: #ef4444;
+            --success: #4ade80;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-light: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 24px 16px;
+            border-radius: 24px;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 
+                        0 0 30px var(--royal-gold-muted);
+            position: relative;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+        }
+
+        .web3-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--royal-gold-light) 0%, var(--royal-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 12px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
+        }
+
+        .theme-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .theme-controls-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-theme-toggle {
+            background: var(--royal-gold-muted);
+            border: 1px solid var(--border-glow);
+            color: var(--royal-gold-light);
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-theme-toggle:hover {
+            opacity: 0.85;
+        }
+
+        .theme-dropdown-select {
+            background: #0d0e12;
+            color: var(--text-main);
+            border: 1px solid var(--border-glow);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .network-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            background: var(--royal-gold-muted);
+            color: var(--royal-gold-light);
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid var(--border-glow);
+        }
+
+        .network-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--royal-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--royal-gold);
+        }
+
+        .web3-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-light);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--royal-gold-muted) 0%, rgba(30, 58, 138, 0.4) 100%);
+            color: var(--royal-gold-light);
+            border: 1px solid var(--border-glow);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        button {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, var(--royal-navy-dark) 0%, var(--royal-navy) 50%, #172554 100%);
+            color: var(--royal-gold-light);
+            border: 1px solid var(--royal-gold);
+            box-shadow: 0 4px 20px var(--royal-gold-muted);
+        }
+
+        .btn-record:hover {
+            box-shadow: 0 6px 25px var(--border-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-record.recording {
+            background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
+            border-color: #fca5a5;
+            color: #ffffff;
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            70% { transform: scale(0.98); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .status {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 20px;
+        }
+
+        .preview-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        #preview-text {
+            width: 100%;
+            min-height: 80px;
+            padding: 14px 36px 14px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            color: var(--text-main);
+            resize: vertical;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: inherit;
+        }
+
+        #preview-text:focus {
+            outline: none;
+            border-color: var(--royal-gold);
+            box-shadow: 0 0 10px var(--royal-gold-muted);
+        }
+
+        .btn-clear-input {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--royal-gold) 0%, var(--royal-gold-light) 100%);
+            color: #0b0f19;
+            border: 1px solid var(--royal-gold-light);
+            box-shadow: 0 4px 15px var(--royal-gold-muted);
+        }
+
+        .btn-save:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--border-glow);
+        }
+
+        .logs-section {
+            border-top: 1px solid var(--border-light);
+            padding-top: 20px;
+        }
+
+        .logs-header-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .logs-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        .btn-sort-toggle {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sort-toggle:hover {
+            border-color: var(--royal-gold);
+            color: var(--text-main);
+        }
+
+        .log-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .log-item:hover {
+            border-color: var(--border-glow);
+        }
+
+        .log-row-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .log-block-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--royal-gold-light);
+            background: var(--royal-gold-muted);
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-glow);
+        }
+
+        .log-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .log-row-2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .log-task-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            word-break: break-word;
+        }
+
+        .log-total-money {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        .log-total-money.plus { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+        .log-total-money.minus { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .log-total-money.zero { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+
+        .btn-action-icon {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-icon:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .btn-action-icon.btn-dropdown.active {
+            background: var(--royal-gold-muted);
+            color: var(--royal-gold-light);
+            border-color: var(--royal-gold);
+            transform: rotate(180deg);
+        }
+
+        .btn-action-icon.btn-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .log-dropdown-content {
+            display: none;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-light);
+        }
+
+        .timestamp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 8px 10px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .timestamp-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .dd-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .dd-row-1-num {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--royal-gold-light);
+        }
+
+        .dd-row-2-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .tx-badge {
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .tx-plus { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+        .tx-minus { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        .finance-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .balance-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .balance-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--royal-gold-light);
+        }
+
+        .btn-toggle-init {
+            width: 100%;
+            padding: 10px;
+            font-size: 13px;
+            border-radius: 12px;
+            background: var(--royal-gold-muted);
+            border: 1px solid var(--border-glow);
+            color: var(--royal-gold-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-toggle-init:hover {
+            opacity: 0.85;
+            border-color: var(--royal-gold);
+        }
+
+        .init-balance-box {
+            display: none;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .init-balance-box.active {
+            display: flex;
+        }
+
+        .input-balance {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .input-balance:focus {
+            outline: none;
+            border-color: var(--royal-gold);
+        }
+
+        .btn-init {
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 10px;
+            background: var(--royal-gold);
+            color: #0b0f19;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .btn-init:hover {
+            background: var(--royal-gold-light);
+        }
+
+        .chart-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .chart-container-box {
+            position: relative;
+            width: 100%;
+            height: 220px;
+        }
+
+        .btn-clear-all {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            font-size: 13px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .btn-clear-all:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+        }
+    </style>
+</head>
+<body class="theme-gold">
+
+<div class="container">
+    <div class="web3-header">
+        <h2>AI HUB LOG ENGINE</h2>
+        <div class="network-badge">Local Engine / Financial Track</div>
+    </div>
+
+    <div class="theme-section">
+        <div class="theme-label">Giao diện</div>
+        <div class="theme-controls-wrapper">
+            <button id="theme-toggle-btn" class="btn-theme-toggle">⚡ Đổi nhanh</button>
+            <select id="theme-select" class="theme-dropdown-select">
+                <option value="gold">Hoàng Gia</option>
+                <option value="cyber">Lam  Ngọc</option>
+                <option value="blood">Huyết Nguyệt</option>
+                <option value="emerald">Phỉ Thúy</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="web3-tabs">
+        <button class="tab-btn active" data-tab="timeline">📝 Lịch Trình</button>
+        <button class="tab-btn" data-tab="finance">📊 Xu hướng</button>
+    </div>
+
+    <!-- TAB 1: Lịch Trình -->
+    <div id="tab-timeline" class="tab-content active">
+        <div class="controls">
+            <button id="record-btn" class="btn-record">
+                 <span id="btn-text">🎙️ Nhấn để ghi âm</span>
+            </button>
+            <div id="status" class="status">Mẹo: Đọc rõ các số. Riêng số tròn trăm,... đọc rõ</div>
+            
+            <div class="preview-wrapper">
+                <textarea id="preview-text" placeholder="Dữ liệu + Từ khóa&#10;(Vd: Work a100, Eat b50)"></textarea>
+                <button id="clear-input-btn" class="btn-clear-input" title="Xóa nội dung">✕</button>
+            </div>
+
+            <button id="save-btn" class="btn-save">💾 Nạp dữ liệu</button>
+        </div>
+
+        <div class="logs-section">
+            <div class="logs-header-toolbar">
+                <span class="logs-title">Danh sách Khối dữ liệu Ledger</span>
+                <button id="sort-toggle-btn" class="btn-sort-toggle" title="Sắp xếp danh sách">
+                    <span id="sort-icon">⬆️</span>
+                    <span id="sort-label">Mới nhất</span>
+                </button>
+            </div>
+
+            <div id="logs-container"></div>
+
+            <button id="clear-all-btn" class="btn-clear-all" style="display: none;">
+                🗑️ Wipe Toàn Bộ Data (Lịch Trình & Tài Chính)
+            </button>
+        </div>
+    </div>
+
+    <!-- TAB 2: Tài Chính -->
+    <div id="tab-finance" class="tab-content">
+        <div class="finance-card">
+            <div class="balance-title">Số dư hiện tại ($)</div>
+            <div id="balance-display" class="balance-value">0</div>
+        </div>
+
+        <!-- Khung biểu đồ -->
+        <div class="chart-wrapper">
+            <div class="balance-title" style="margin-bottom: 8px;">Biến động Tài sản</div>
+            <div id="chart-box" class="chart-container-box">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Nút gộp Khởi tạo / Cấu hình số dư -->
+        <div class="finance-card" style="margin-top: 20px; margin-bottom: 0;">
+            <button id="toggle-init-box-btn" class="btn-toggle-init">⚙️ Cấu hình số dư ban đầu</button>
+            <div id="init-balance-wrapper" class="init-balance-box">
+                <input type="number" id="init-balance-input" class="input-balance" placeholder="Nhập số tiền ban đầu...">
+                <button id="init-balance-btn" class="btn-init">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./app.js"></script>
+
+</body>
+</html>
