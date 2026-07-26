@@ -75,6 +75,10 @@ body {
     border: 1px solid var(--border-glow);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     overflow: hidden;
+    /* 👇 BỔ SUNG ĐOẠN NÀY ĐỂ CHỐNG GIẬT RIÊNG CHO THEME GOLD 👇 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transform: translateZ(0);
+    will-change: border-color, box-shadow;
 }
 
 /* Header */
