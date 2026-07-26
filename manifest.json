@@ -1,0 +1,53 @@
+{
+  "name": "AI Timeline & Finance Log",
+  "short_name": "WorkDay",
+  "description": "Giao thức quản trị thời gian, nhật ký công việc và theo dõi biến động tài sản.",
+  "categories": [
+    "productivity",
+    "finance"
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1235",
+  "icons": [
+    {
+      "src": "./icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nhật ký Lịch trình",
+      "short_name": "Lịch trình",
+      "description": "Ghi chép nhanh lịch trình và mốc thời gian",
+      "url": "./index.html?tab=timeline",
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Xu hướng Tài chính",
+      "short_name": "Tài chính",
+      "description": "Xem số dư và biểu đồ biến động tài sản",
+      "url": "./index.html?tab=finance",
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

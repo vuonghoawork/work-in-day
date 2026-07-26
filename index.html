@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Hub Log Engine</title>
+    
+    <meta name="description" content="Nhật ký ghi chép thói quen và tài chính thông minh bằng giọng nói">
+    <meta name="theme-color" content="#0a0f1d">
+
+    <!-- Khai báo Manifest cho PWA -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Favicon & Icon ứng dụng -->
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+
+    <!-- Cấu hình riêng cho iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI Hub Log">
+
+    <!-- Font chữ Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Nhúng CSS bên ngoài -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="theme-gold">
+
+<div class="container">
+    <!-- Header: Tối ưu thanh tiêu đề & nút đổi Theme -->
+    <header class="app-header">
+        <div class="app-title">
+            <h2>AI HUB LOG</h2>
+            <span class="subtitle">Smart Voice Tracker</span>
+        </div>
+        <button id="theme-toggle-btn" class="btn-theme-quick" title="Chuyển Theme">🎨</button>
+    </header>
+
+    <!-- Khối Input: Đưa nút Ghi Âm xuống làm Thanh tác vụ nhanh -->
+    <div class="input-card">
+        <div class="preview-wrapper">
+            <textarea id="preview-text" placeholder="Nhập lệnh hoặc nhấn micro...
+VD: làm a400, ăn b20 (Tài chính) | tập c2, muộn d1 (Lối sống)"></textarea>
+            <button id="clear-input-btn" class="btn-clear-input">✕</button>
+        </div>
+
+        <div class="input-actions">
+            <button id="record-btn" class="btn-record">
+                <span id="record-icon">🎙️</span> <span id="record-text">Nhấn để ghi âm</span>
+            </button>
+            <button id="save-btn" class="btn-save">LƯU NHẬT KÝ</button>
+        </div>
+        
+        <div id="status" class="status">Sẵn sàng nhận lệnh...</div>
+    </div>
+
+    <!-- Sub Tabs Navigation: Dạng Segmented Control -->
+    <nav class="sub-tabs">
+        <button class="tab-btn active" data-tab="logs">📝 Nhật Ký</button>
+        <button class="tab-btn" data-tab="chart">📈 Biến Động</button>
+    </nav>
+
+    <!-- Khung chứa nội dung Tabs -->
+    <main class="tabs-viewport">
+        <!-- Tab 1: Nhật ký -->
+        <section id="tab-logs" class="tab-content active">
+            <div class="logs-header">
+                <span>Lịch sử ghi chép</span>
+                <span id="sort-toggle-btn" style="cursor:pointer">⬆️ Mới nhất</span>
+            </div>
+            <div id="logs-container"></div>
+            <button id="toggle-logs-btn" class="btn-toggle-all" style="display:none;">Xem tất cả</button>
+        </section>
+
+        <!-- Tab 2: Biến động -->
+        <section id="tab-chart" class="tab-content">
+            <div class="chart-header">
+                <span>Xu hướng biến động tích lũy</span>
+                <button id="toggle-chart-limit-btn" class="btn-chart-toggle">Tất cả dữ liệu</button>
+            </div>
+            <div class="chart-card">
+                <div class="chart-wrapper">
+                    <canvas id="fluctuationChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Thư viện Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Nhúng JavaScript logic ứng dụng -->
+<script src="./app.js"></script>
+</body>
+</html>
